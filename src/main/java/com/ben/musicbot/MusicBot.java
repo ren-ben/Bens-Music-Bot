@@ -12,8 +12,7 @@ public class MusicBot {
     private final ShardManager shardManager;
 
     public MusicBot() throws LoginException {
-        String token = "OTc3OTE4NzQxMTk3MjI1OTk0.GuVd4g.ebH8_ix61XxZb8QqWVlbWbruQD9YMfDMfIvNpc";
-        DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token);
+        DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(Token.token);
         builder.setStatus(OnlineStatus.ONLINE);
         builder.setActivity(Activity.watching("( * ) ( * )"));
         shardManager = builder.build();
