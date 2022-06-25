@@ -1,21 +1,19 @@
 package com.ben.musicbot.commands.commands;
 
 import com.ben.musicbot.commands.types.IServerCommand;
+import com.ben.musicbot.music.GuildMusicManager;
 import com.ben.musicbot.music.PlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Objects;
 
-public class PlayCommand implements IServerCommand {
+public class SkipCommand implements IServerCommand {
     @Override
     public void performCommand(String[] args, Guild guild, Member member, TextChannel textChannel, Message message) {
-
-
         if (!Objects.requireNonNull(guild.getSelfMember().getVoiceState()).inAudioChannel()) {
             textChannel.sendMessage("You need to be in a voice channel 🙃").queue();
             return;
@@ -26,22 +24,14 @@ public class PlayCommand implements IServerCommand {
             return;
         }
 
-        String link = args[1];
-
-        if (!isUrl(args[1])) {
-            link = "ytsearch:" + link;
+        GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
+        AudioPlayer audioPlayer = musicManager.audioPlayer;
+        if(audioPlayer.getPlayingTrack() == null) {
+            textChannel.sendMessage("Hmm...🧐 Doesn't seem like there's a Track Playing").queue();
+            return;
         }
 
-        PlayerManager.getInstance().loadAndPlay(textChannel, link);
-
+        musicManager.scheduler.nextTrack();
+        textChannel.sendMessage("Skipped 💪").queue();
     }
-
-    private boolean isUrl(String url) {
-        try {
-            new URI(url);
-            return true;
-        } catch (URISyntaxException e) {
-            return false;
-        }
-    }
-    }
+}

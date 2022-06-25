@@ -1,21 +1,18 @@
 package com.ben.musicbot.commands.commands;
 
 import com.ben.musicbot.commands.types.IServerCommand;
+import com.ben.musicbot.music.GuildMusicManager;
 import com.ben.musicbot.music.PlayerManager;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Objects;
 
-public class PlayCommand implements IServerCommand {
+public class StopCommand implements IServerCommand {
     @Override
     public void performCommand(String[] args, Guild guild, Member member, TextChannel textChannel, Message message) {
-
-
         if (!Objects.requireNonNull(guild.getSelfMember().getVoiceState()).inAudioChannel()) {
             textChannel.sendMessage("You need to be in a voice channel 🙃").queue();
             return;
@@ -26,22 +23,11 @@ public class PlayCommand implements IServerCommand {
             return;
         }
 
-        String link = args[1];
+        GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
 
-        if (!isUrl(args[1])) {
-            link = "ytsearch:" + link;
-        }
+        musicManager.scheduler.player.stopTrack();
+        musicManager.scheduler.queue.clear();
 
-        PlayerManager.getInstance().loadAndPlay(textChannel, link);
-
+        textChannel.sendMessage("Stopped 🥳").queue();
     }
-
-    private boolean isUrl(String url) {
-        try {
-            new URI(url);
-            return true;
-        } catch (URISyntaxException e) {
-            return false;
-        }
-    }
-    }
+}

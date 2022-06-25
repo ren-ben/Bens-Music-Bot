@@ -2,6 +2,8 @@ package com.ben.musicbot.commands;
 
 import com.ben.musicbot.commands.commands.JoinCommand;
 import com.ben.musicbot.commands.commands.PlayCommand;
+import com.ben.musicbot.commands.commands.SkipCommand;
+import com.ben.musicbot.commands.commands.StopCommand;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -16,10 +18,14 @@ public class CommandManager extends ListenerAdapter {
 
     private final JoinCommand joinCommand;
     private final PlayCommand playCommand;
+    private final StopCommand stopCommand;
+    private final SkipCommand skipCommand;
 
     public CommandManager() {
         this.joinCommand = new JoinCommand();
         this.playCommand = new PlayCommand();
+        this.stopCommand = new StopCommand();
+        this.skipCommand = new SkipCommand();
     }
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
@@ -35,6 +41,10 @@ public class CommandManager extends ListenerAdapter {
                 joinCommand.performCommand(args, guild, member, tc, msg);
             } else if ("!play".equals(args[0])) {
                 playCommand.performCommand(args,guild,member,tc,msg);
+            } else if ("!stop".equals(args[0])) {
+                stopCommand.performCommand(args,guild,member,tc,msg);
+            } else if ("!skip".equals(args[0])) {
+                skipCommand.performCommand(args,guild,member,tc,msg);
             }
         }
     }
