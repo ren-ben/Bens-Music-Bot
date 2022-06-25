@@ -1,9 +1,6 @@
 package com.ben.musicbot.commands;
 
-import com.ben.musicbot.commands.commands.JoinCommand;
-import com.ben.musicbot.commands.commands.PlayCommand;
-import com.ben.musicbot.commands.commands.SkipCommand;
-import com.ben.musicbot.commands.commands.StopCommand;
+import com.ben.musicbot.commands.commands.*;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -20,12 +17,18 @@ public class CommandManager extends ListenerAdapter {
     private final PlayCommand playCommand;
     private final StopCommand stopCommand;
     private final SkipCommand skipCommand;
+    private final NowPlayingCommand nowPlayingCommand;
+    private final QueueCommand queueCommand;
+    private final RepeatCommand repeatCommand;
 
     public CommandManager() {
         this.joinCommand = new JoinCommand();
         this.playCommand = new PlayCommand();
         this.stopCommand = new StopCommand();
         this.skipCommand = new SkipCommand();
+        this.nowPlayingCommand = new NowPlayingCommand();
+        this.queueCommand = new QueueCommand();
+        this.repeatCommand = new RepeatCommand();
     }
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
@@ -45,6 +48,12 @@ public class CommandManager extends ListenerAdapter {
                 stopCommand.performCommand(args,guild,member,tc,msg);
             } else if ("!skip".equals(args[0])) {
                 skipCommand.performCommand(args,guild,member,tc,msg);
+            } else if ("!nowplaying".equals(args[0])) {
+                nowPlayingCommand.performCommand(args,guild,member,tc,msg);
+            } else if ("!queue".equals(args[0])) {
+                queueCommand.performCommand(args,guild,member,tc,msg);
+            } else if ("!repeat".equals(args[0])) {
+                repeatCommand.performCommand(args,guild,member,tc,msg);
             }
         }
     }
